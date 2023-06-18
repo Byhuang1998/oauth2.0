@@ -1,6 +1,6 @@
 package com.byhuang;
 
-import com.byhuang.session.entity.User;
+import com.byhuang.session.pojo.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 /**
- * @author mskj-huangbingyi
+ * @author huangbingyi
  * @version 1.0
  * @date 2023/6/18 18:37
  * @description 数据库操作测试类

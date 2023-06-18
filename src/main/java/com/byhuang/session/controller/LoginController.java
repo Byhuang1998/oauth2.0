@@ -1,10 +1,15 @@
 package com.byhuang.session.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.byhuang.session.pojo.dto.LoginDTO;
+import com.byhuang.session.pojo.dto.LoginResult;
+import com.byhuang.session.service.LoginService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 /**
- * @author mskj-huangbingyi
+ * @author huangbingyi
  * @version 1.0
  * @date 2023/6/18 14:17
  * @description 登录控制器
@@ -12,9 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LoginController {
 
-    @RequestMapping("/login")
-    public String login() {
-
-        return null;
+    @Autowired
+    private LoginService loginService;
+    
+    @PostMapping("/login")
+    public String login(@RequestBody LoginDTO loginDTO, HttpSession httpSession) {
+        LoginResult loginResult = loginService.login(loginDTO);
+        if (loginResult.isFlag()) {
+            return "welcome," + loginResult.getRetMsg();
+        }
+        httpSession.setAttribute("user", loginResult);
+        return loginResult.getRetMsg();
     }
 }
