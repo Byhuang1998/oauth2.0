@@ -17,7 +17,7 @@ target/
 .idea
 .prefs
 .idea/*
-.iml
+*/.iml
 
 #compiled class file
 *.class
