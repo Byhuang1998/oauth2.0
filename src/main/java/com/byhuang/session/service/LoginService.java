@@ -30,7 +30,7 @@ public class LoginService {
         if (!checkUsernameAndPassword(password, user.getPassword())) {
             return new LoginResult("username and password don't match", false);
         }
-        return new LoginResult(user.getUsername(), true);
+        return new LoginResult(user.getUid(), true);
     }
     
     private boolean checkUsernameAndPassword(String inputPassword, String rightPassword) {
