@@ -3,6 +3,7 @@ package com.byhuang.session.controller;
 import com.byhuang.session.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2023/6/18 22:27
  * @description 资源控制器
  */
-@RestController("/resource")
+@RestController
+@RequestMapping("/resource")
 public class ResourceController {
 
     @Autowired
