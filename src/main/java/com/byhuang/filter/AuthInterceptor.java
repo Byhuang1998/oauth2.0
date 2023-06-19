@@ -1,5 +1,6 @@
 package com.byhuang.filter;
 
+import com.byhuang.session.pojo.dto.LoginResult;
 import com.byhuang.session.pojo.entity.User;
 import com.byhuang.session.service.PermissionService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +43,9 @@ public class AuthInterceptor implements HandlerInterceptor {
             log.info("please log in...");
             return false;
         }
-        User user = (User) o;
+        LoginResult loginResult = (LoginResult) o;
         // to get the permission the user has.
-        List<String> permissions = permissionService.listPermission(user.getUid());
+        List<String> permissions = permissionService.listPermission(loginResult.getRetMsg());
         if (!permissions.contains(requestURI)) {
             log.info("no permission for the resource...");
             return false;

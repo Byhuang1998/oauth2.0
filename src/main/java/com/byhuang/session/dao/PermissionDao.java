@@ -19,7 +19,7 @@ public class PermissionDao {
     private JdbcTemplate jdbcTemplate;
 
     public List<String> listPermission(String uid) {
-        String sql = "select * from permission where uid = ?;";
+        String sql = "select resource from permission where uid = ?;";
         return jdbcTemplate.queryForList(sql, String.class, uid);
     }
 

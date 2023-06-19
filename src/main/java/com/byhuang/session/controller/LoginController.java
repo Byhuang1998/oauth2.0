@@ -24,9 +24,9 @@ public class LoginController {
     public String login(@RequestBody LoginDTO loginDTO, HttpSession httpSession) {
         LoginResult loginResult = loginService.login(loginDTO);
         if (loginResult.isFlag()) {
+            httpSession.setAttribute("user", loginResult);
             return "welcome," + loginResult.getRetMsg();
         }
-        httpSession.setAttribute("user", loginResult);
         return loginResult.getRetMsg();
     }
 }
