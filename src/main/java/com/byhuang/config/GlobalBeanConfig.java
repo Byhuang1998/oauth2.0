@@ -14,7 +14,7 @@ import javax.sql.DataSource;
  * @description TODO
  */
 @Configuration
-public class GlobalConfig {
+public class GlobalBeanConfig {
 
     @Autowired
     private DataSource dataSource;
