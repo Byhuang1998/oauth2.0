@@ -16,7 +16,7 @@ public class User {
     public User() {
 
     }
-
+    private String uid;
     private String username;
     private String password;
 }
