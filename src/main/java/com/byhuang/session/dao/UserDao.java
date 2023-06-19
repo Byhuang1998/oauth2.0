@@ -6,9 +6,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
-import java.util.Objects;
-
 /**
  * @author huangbingyi
  * @version 1.0
@@ -23,7 +20,7 @@ public class UserDao {
 
     public User selectUserByName(String username) {
         String sql = "select * from user where username = ?;";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), "张三");
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), username);
     }
 
 }
