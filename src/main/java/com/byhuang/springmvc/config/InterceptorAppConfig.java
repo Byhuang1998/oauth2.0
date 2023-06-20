@@ -1,6 +1,6 @@
 package com.byhuang.springmvc.config;
 
-import com.byhuang.springmvc.filter.AuthInterceptor;
+import com.byhuang.springmvc.interceptor.AuthInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

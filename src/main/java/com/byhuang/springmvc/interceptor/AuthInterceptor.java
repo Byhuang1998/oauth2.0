@@ -1,4 +1,4 @@
-package com.byhuang.springmvc.filter;
+package com.byhuang.springmvc.interceptor;
 
 import com.byhuang.springmvc.pojo.dto.LoginResult;
 import com.byhuang.springmvc.service.PermissionService;
