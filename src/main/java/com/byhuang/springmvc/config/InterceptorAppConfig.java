@@ -19,6 +19,8 @@ public class InterceptorAppConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authInterceptor);
+        // modified by by.
+        //In order not to affect subsequent tests, unregister the interceptor first
+//        registry.addInterceptor(authInterceptor);
     }
 }
