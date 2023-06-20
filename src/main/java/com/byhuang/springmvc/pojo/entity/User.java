@@ -1,4 +1,4 @@
-package com.byhuang.session.pojo.entity;
+package com.byhuang.springmvc.pojo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,8 +1,7 @@
-package com.byhuang.filter;
+package com.byhuang.springmvc.filter;
 
-import com.byhuang.session.pojo.dto.LoginResult;
-import com.byhuang.session.pojo.entity.User;
-import com.byhuang.session.service.PermissionService;
+import com.byhuang.springmvc.pojo.dto.LoginResult;
+import com.byhuang.springmvc.service.PermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;

@@ -1,4 +1,4 @@
-package com.byhuang.config;
+package com.byhuang.springmvc.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

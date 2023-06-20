@@ -1,8 +1,8 @@
-package com.byhuang.session.service;
+package com.byhuang.springmvc.service;
 
-import com.byhuang.session.pojo.dto.LoginDTO;
-import com.byhuang.session.pojo.dto.LoginResult;
-import com.byhuang.session.pojo.entity.User;
+import com.byhuang.springmvc.pojo.dto.LoginDTO;
+import com.byhuang.springmvc.pojo.dto.LoginResult;
+import com.byhuang.springmvc.pojo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

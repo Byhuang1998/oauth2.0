@@ -1,6 +1,6 @@
-package com.byhuang.session.service;
+package com.byhuang.springmvc.service;
 
-import com.byhuang.session.dao.PermissionDao;
+import com.byhuang.springmvc.dao.PermissionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

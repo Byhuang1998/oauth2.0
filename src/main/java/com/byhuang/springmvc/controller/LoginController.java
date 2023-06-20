@@ -1,8 +1,8 @@
-package com.byhuang.session.controller;
+package com.byhuang.springmvc.controller;
 
-import com.byhuang.session.pojo.dto.LoginDTO;
-import com.byhuang.session.pojo.dto.LoginResult;
-import com.byhuang.session.service.LoginService;
+import com.byhuang.springmvc.pojo.dto.LoginDTO;
+import com.byhuang.springmvc.pojo.dto.LoginResult;
+import com.byhuang.springmvc.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

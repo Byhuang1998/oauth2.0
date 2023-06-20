@@ -1,4 +1,4 @@
-package com.byhuang.session.dao;
+package com.byhuang.springmvc.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

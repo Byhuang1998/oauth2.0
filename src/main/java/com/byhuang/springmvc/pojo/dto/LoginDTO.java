@@ -1,4 +1,4 @@
-package com.byhuang.session.pojo.dto;
+package com.byhuang.springmvc.pojo.dto;
 
 import lombok.Data;
 

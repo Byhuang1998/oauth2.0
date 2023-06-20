@@ -1,6 +1,6 @@
-package com.byhuang.session.dao;
+package com.byhuang.springmvc.dao;
 
-import com.byhuang.session.pojo.entity.User;
+import com.byhuang.springmvc.pojo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,7 +1,7 @@
-package com.byhuang.session.service;
+package com.byhuang.springmvc.service;
 
-import com.byhuang.session.dao.UserDao;
-import com.byhuang.session.pojo.entity.User;
+import com.byhuang.springmvc.dao.UserDao;
+import com.byhuang.springmvc.pojo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
