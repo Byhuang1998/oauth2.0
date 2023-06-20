@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Objects;
 
 /**
  * @author huangbingyi
@@ -28,5 +29,16 @@ public class LoginController {
             return "welcome," + loginResult.getRetMsg();
         }
         return loginResult.getRetMsg();
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        LoginResult loginResult = (LoginResult) httpSession.getAttribute("user");
+        httpSession.removeAttribute("user");
+        String ret = "goodbye ";
+        if (!Objects.isNull(loginResult)) {
+            ret += loginResult.getRetMsg();
+        }
+        return ret;
     }
 }

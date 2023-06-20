@@ -23,7 +23,7 @@ import java.util.*;
 @Order(1)
 @Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
-    private Set<String> whiteList = new HashSet<>(Arrays.asList("/login"));
+    private Set<String> whiteList = new HashSet<>(Arrays.asList("/login", "/logout"));
 
     @Autowired
     private PermissionService permissionService;
