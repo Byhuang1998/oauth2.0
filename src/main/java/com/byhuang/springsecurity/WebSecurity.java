@@ -12,6 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    // 定义用户信息服务（查询用户信息）
+
+    // 密码编码器
+
+    // 配置安全拦截机制
 
 
 }
