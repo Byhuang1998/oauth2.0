@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/oauth?useUnicode=true&characterEncoding=utf-8&&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://47.93.122.139:3306/security?useUnicode=true&characterEncoding=utf-8&&serverTimezone=Asia/Shanghai
     username: root
-    password: root
+    password: 123456
 logging:
   level:
     root: info
