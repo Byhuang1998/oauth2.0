@@ -1,4 +1,4 @@
-package com.byhuang.springmvc.pojo.entity;
+package com.byhuang.pojo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +16,7 @@ public class User {
     public User() {
 
     }
-    private String uid;
-    private String username;
+    private String id;
+    private String name;
     private String password;
 }
