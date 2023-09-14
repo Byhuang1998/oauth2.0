@@ -28,9 +28,8 @@ import java.util.concurrent.TimeUnit;
  * - 使用Redis作为服务端存储Token的缓存
  * - 提供了操作Redis缓存的方法
  * - 可以自定义有效期和加密算法
- *
  */
-public class JwtUtils {
+public class JWTUtils {
     /*================================= 属性 =================================*/
     //Jwt的加密密钥
     private static String secretKey = "DefaultJwtSecretKey";
@@ -55,6 +54,7 @@ public class JwtUtils {
      * - iat(ISSUED_AT) -> 签发时间
      * - exp(EXPIRATION) -> 过期时间
      * Token只存储用户的基本信息，其他信息通过数据库查询获取(例如：用户权限、用户详细资料)
+     *
      * @param userDetails 用于生成Token的用户信息
      * @return 要生成的Token字符串
      */
@@ -77,7 +77,7 @@ public class JwtUtils {
                 .signWith(signatureAlgorithm, secretKey)//使用指定加密方式和密钥进行签名
                 .compact();//生成字符串类型的Token
         //将生成的Token字符串存入Redis，同时设置缓存有效期
-        if(StringUtils.hasText(token)){
+        if (StringUtils.hasText(token)) {
             tokenCache.opsForValue().set(username, token, expirationTime, TimeUnit.MILLISECONDS);
         }
         return token;
@@ -86,15 +86,16 @@ public class JwtUtils {
     /**
      * 验证Token
      * 验证方法：将客户端携带的Token进行解析，如果没有抛出解析异常(JwtException)，如果相同就返回true，反之返回false
+     *
      * @param token 客户端携带过来的要验证的Token
      * @return Token是否有效
      */
     public static boolean validateToken(String token) {
-        try{
-            if(isTokenExpired(token)){
+        try {
+            if (isTokenExpired(token)) {
                 return false;
             }
-        }catch(JwtException e){
+        } catch (JwtException e) {
             e.printStackTrace();
             return false;
         }
@@ -104,24 +105,25 @@ public class JwtUtils {
     /**
      * 判断Token是否过期
      * 使用Token有效载荷中的过期时间与当前时间进行比较
+     *
      * @param token 要判断的Token字符串
      * @return 是否过期
      */
-    private static boolean isTokenExpired(String token) throws JwtException{
-        try{
+    private static boolean isTokenExpired(String token) throws JwtException {
+        try {
             //从Token中获取有效载荷
             Claims claims = parseToken(token);
             //从有效载荷中获取用户名
             String username = claims.get("Username", String.class);
-            if(StringUtils.isEmpty(username)){
+            if (StringUtils.isEmpty(username)) {
                 return true;
             }
             //通过用户名从缓存中获取指定的Token
             Object cacheToken = tokenCache.opsForValue().get("Username");
-            if(StringUtils.isEmpty(cacheToken)){
+            if (StringUtils.isEmpty(cacheToken)) {
                 return true;
             }
-        }catch(SignatureException e){
+        } catch (SignatureException e) {
             throw new SignatureException("令牌签名校验不通过！");
         }
         return false;
@@ -129,16 +131,17 @@ public class JwtUtils {
 
     /**
      * 解析Token字符串并且从其中的有效载荷中获取指定Key的元素，获取的是Object类型的元素
+     *
      * @param token 解析哪个Token字符串并获取其中的有效载荷
-     * @param key 有效载荷中元素的Key
+     * @param key   有效载荷中元素的Key
      * @return 要获取的元素
      */
     public static Object getElement(String token, String key) {
         Object element;
-        try{
+        try {
             Claims claims = parseToken(token);
             element = claims.get(key);
-        }catch(JwtException e){
+        } catch (JwtException e) {
             e.printStackTrace();
             return null;
         }
@@ -147,18 +150,19 @@ public class JwtUtils {
 
     /**
      * 解析Token字符串并且从其中的有效载荷中获取指定Key的元素，获取的是指定泛型类型的元素
+     *
      * @param token 解析哪个Token字符串并获取其中的有效载荷
-     * @param key 有效载荷中元素的Key
+     * @param key   有效载荷中元素的Key
      * @param clazz 指定获取元素的类型
-     * @param <T> 元素的类型
+     * @param <T>   元素的类型
      * @return 要获取的元素
      */
     public static <T> T getElement(String token, String key, Class<T> clazz) {
         T element;
-        try{
+        try {
             Claims claims = parseToken(token);
             element = claims.get(key, clazz);
-        }catch(JwtException e){
+        } catch (JwtException e) {
             e.printStackTrace();
             return null;
         }
@@ -180,7 +184,7 @@ public class JwtUtils {
      * @return 要获取的有效载荷
      * @throws JwtException Token解析错误的异常信息
      */
-    public static Claims parseToken(String token) throws JwtException{
+    public static Claims parseToken(String token) throws JwtException {
         //在JwtParser解析器中配置用于解析的密钥，然后将Token字符串解析为Jws对象，最后从Jws对象中获取Claims
         Claims claims = Jwts
                 .parser()//获取DefaultJwtParser
@@ -194,12 +198,13 @@ public class JwtUtils {
 
     /**
      * 从Token缓存中获取指定Token
+     *
      * @param object 要获取指定Token的对应的Key
      * @return Token字符串
      */
-    public static String getTokenFromCache(Object object){
+    public static String getTokenFromCache(Object object) {
         Object rowToken = tokenCache.opsForValue().get(object);
-        if(StringUtils.isEmpty(rowToken)){
+        if (StringUtils.isEmpty(rowToken)) {
             return null;
         }
         String token = rowToken.toString();
@@ -208,10 +213,11 @@ public class JwtUtils {
 
     /**
      * 从Token缓存中移除指定Token
+     *
      * @param key 要移除指定Token的对应的Key
      * @return 是否成功移除
      */
-    public static boolean removeTokenFromCache(String key){
+    public static boolean removeTokenFromCache(String key) {
         Boolean isDelete = tokenCache.delete(key);
         return isDelete;
     }
@@ -220,30 +226,33 @@ public class JwtUtils {
 
     /**
      * 设置Token有效期，可以使用链式编程
+     *
      * @param expirationTime Token有效期(单位为毫秒)
      * @return 返回当前JwtUtils对象
      */
-    public JwtUtils setExpirationTime(long expirationTime){
+    public JWTUtils setExpirationTime(long expirationTime) {
         this.expirationTime = expirationTime;
         return this;
     }
 
     /**
      * 设置Jwt的加密算法，可以使用链式编程
+     *
      * @param signatureAlgorithm 加密算法
      * @return 返回当前JwtUtils对象
      */
-    public  JwtUtils setSignatureAlgorithm(SignatureAlgorithm signatureAlgorithm){
+    public JWTUtils setSignatureAlgorithm(SignatureAlgorithm signatureAlgorithm) {
         this.signatureAlgorithm = signatureAlgorithm;
         return this;
     }
 
     /**
      * 设置Jwt的加密密钥，可以使用链式编程
+     *
      * @param secretKey 加密密钥
      * @return 返回当前JwtUtils对象
      */
-    public JwtUtils setSecretKey(String secretKey){
+    public JWTUtils setSecretKey(String secretKey) {
         this.secretKey = secretKey;
         return this;
     }
