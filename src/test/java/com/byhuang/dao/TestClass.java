@@ -6,13 +6,17 @@ import com.byhuang.utils.JWTUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootTest
-public class TestUserDao {
+public class TestClass {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -21,6 +25,14 @@ public class TestUserDao {
     public void testSelectUserByName() {
         User by = userDao.selectUserByName("by");
         System.out.println(by.toString());
+    }
+
+    @Test
+    public void testRedisTemplate() {
+        redisTemplate.opsForValue().set("key", "value");
+
+        String value = redisTemplate.opsForValue().get("key");
+        System.out.println(value);
     }
 
     @Test
