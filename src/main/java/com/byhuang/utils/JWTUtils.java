@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.TextCodec;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,13 +35,14 @@ public class JWTUtils {
     //Jwt的加密密钥
     private static String secretKey = "DefaultJwtSecretKey";
     //使用BASE64加密后的Jwt的加密密钥
-//    private static final String BASE64_SECRET_KEY = TextCodec.BASE64.encode(secretKey);
+    private static final String BASE64_SECRET_KEY = TextCodec.BASE64.encode(secretKey) +
+            TextCodec.BASE64.encode(secretKey) + TextCodec.BASE64.encode(secretKey);
     //Token的过期时间，默认为一周(单位为毫秒)
     private static long expirationTime = 60 * 1000 * 60 * 24 * 7L;
     //Token的加密算法，默认使用HS256
     private static SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
     //服务端的Token缓存，默认使用Redis
-    private static RedisTemplate<String, Object> tokenCache = new RedisTemplate<>();
+//    private static RedisTemplate<String, Object> tokenCache = new RedisTemplate<>();
 
     /*================================= 方法 =================================*/
 
@@ -74,11 +76,11 @@ public class JWTUtils {
         String token = Jwts
                 .builder()//获取DefaultJwtBuilder
                 .setClaims(claims)//设置声明
-                .signWith(signatureAlgorithm, secretKey)//使用指定加密方式和密钥进行签名
+                .signWith(signatureAlgorithm, BASE64_SECRET_KEY)//使用指定加密方式和密钥进行签名
                 .compact();//生成字符串类型的Token
         //将生成的Token字符串存入Redis，同时设置缓存有效期
         if (StringUtils.hasText(token)) {
-            tokenCache.opsForValue().set(username, token, expirationTime, TimeUnit.MILLISECONDS);
+//            tokenCache.opsForValue().set(username, token, expirationTime, TimeUnit.MILLISECONDS);
         }
         return token;
     }
@@ -119,10 +121,10 @@ public class JWTUtils {
                 return true;
             }
             //通过用户名从缓存中获取指定的Token
-            Object cacheToken = tokenCache.opsForValue().get("Username");
-            if (StringUtils.isEmpty(cacheToken)) {
-                return true;
-            }
+//            Object cacheToken = tokenCache.opsForValue().get("Username");
+//            if (StringUtils.isEmpty(cacheToken)) {
+//                return true;
+//            }
         } catch (SignatureException e) {
             throw new SignatureException("令牌签名校验不通过！");
         }
@@ -188,7 +190,7 @@ public class JWTUtils {
         //在JwtParser解析器中配置用于解析的密钥，然后将Token字符串解析为Jws对象，最后从Jws对象中获取Claims
         Claims claims = Jwts
                 .parser()//获取DefaultJwtParser
-                .setSigningKey(secretKey)//为获取DefaultJwtParser设置签名时使用的密钥
+                .setSigningKey(BASE64_SECRET_KEY)//为获取DefaultJwtParser设置签名时使用的密钥
                 .parseClaimsJws(token)//解析Token
                 .getBody();//获取Claims
         return claims;
@@ -203,7 +205,8 @@ public class JWTUtils {
      * @return Token字符串
      */
     public static String getTokenFromCache(Object object) {
-        Object rowToken = tokenCache.opsForValue().get(object);
+//        Object rowToken = tokenCache.opsForValue().get(object);
+        Object rowToken = new LoginDTO();
         if (StringUtils.isEmpty(rowToken)) {
             return null;
         }
@@ -218,7 +221,8 @@ public class JWTUtils {
      * @return 是否成功移除
      */
     public static boolean removeTokenFromCache(String key) {
-        Boolean isDelete = tokenCache.delete(key);
+//        Boolean isDelete = tokenCache.delete(key);
+        Boolean isDelete = Boolean.TRUE;
         return isDelete;
     }
 
