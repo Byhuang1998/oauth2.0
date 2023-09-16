@@ -7,14 +7,16 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
 import io.jsonwebtoken.security.SignatureException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Gaoziyang
@@ -30,6 +32,7 @@ import java.util.concurrent.TimeUnit;
  * - 提供了操作Redis缓存的方法
  * - 可以自定义有效期和加密算法
  */
+@Component
 public class JWTUtils {
     /*================================= 属性 =================================*/
     //Jwt的加密密钥
@@ -42,7 +45,15 @@ public class JWTUtils {
     //Token的加密算法，默认使用HS256
     private static SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
     //服务端的Token缓存，默认使用Redis
-//    private static RedisTemplate<String, Object> tokenCache = new RedisTemplate<>();
+    private static RedisTemplate<String, String> redisTemplate;
+
+    @Autowired
+    private RedisTemplate<String, String> template;
+
+    @PostConstruct
+    public void init() {
+        JWTUtils.redisTemplate = template;
+    }
 
     /*================================= 方法 =================================*/
 
@@ -80,7 +91,7 @@ public class JWTUtils {
                 .compact();//生成字符串类型的Token
         //将生成的Token字符串存入Redis，同时设置缓存有效期
         if (StringUtils.hasText(token)) {
-//            tokenCache.opsForValue().set(username, token, expirationTime, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set(username, token);
         }
         return token;
     }
@@ -121,10 +132,10 @@ public class JWTUtils {
                 return true;
             }
             //通过用户名从缓存中获取指定的Token
-//            Object cacheToken = tokenCache.opsForValue().get("Username");
-//            if (StringUtils.isEmpty(cacheToken)) {
-//                return true;
-//            }
+            Object cacheToken = redisTemplate.opsForValue().get(username);
+            if (StringUtils.isEmpty(cacheToken)) {
+                return true;
+            }
         } catch (SignatureException e) {
             throw new SignatureException("令牌签名校验不通过！");
         }
@@ -205,13 +216,11 @@ public class JWTUtils {
      * @return Token字符串
      */
     public static String getTokenFromCache(Object object) {
-//        Object rowToken = tokenCache.opsForValue().get(object);
-        Object rowToken = new LoginDTO();
+        Object rowToken = redisTemplate.opsForValue().get(object);
         if (StringUtils.isEmpty(rowToken)) {
             return null;
         }
-        String token = rowToken.toString();
-        return token;
+        return rowToken.toString();
     }
 
     /**
@@ -221,8 +230,7 @@ public class JWTUtils {
      * @return 是否成功移除
      */
     public static boolean removeTokenFromCache(String key) {
-//        Boolean isDelete = tokenCache.delete(key);
-        Boolean isDelete = Boolean.TRUE;
+        Boolean isDelete = redisTemplate.delete(key);
         return isDelete;
     }
 
