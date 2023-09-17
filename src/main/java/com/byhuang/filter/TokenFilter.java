@@ -38,7 +38,7 @@ public class TokenFilter extends OncePerRequestFilter {
             throw new RuntimeException("尚未登录！");
         }
         LoginDTO user = JSON.parseObject(userString, LoginDTO.class);
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), null);
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, null);
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         filterChain.doFilter(request, response);
     }

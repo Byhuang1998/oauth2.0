@@ -9,16 +9,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping
+@RequestMapping("/user")
 public class LoginController {
 
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     public String login(@RequestBody User user) {
 
         return loginService.login(user);
 
     }
+
+    @PostMapping("/logout")
+    public String logout() {
+        Boolean logout = loginService.logout();
+        return "success";
+    }
+
+
+
 }
