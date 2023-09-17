@@ -1,5 +1,6 @@
 package com.byhuang.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.byhuang.LoginDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -77,7 +78,7 @@ public class JWTUtils {
         Map<String, Object> claims = new HashMap<>();
         String username = user.getUsername();
         //设置有效载荷(Payload)
-        claims.put("Username", username);
+        claims.put("username", username);
         //签发时间
         claims.put(Claims.ISSUED_AT, new Date());
         //过期时间
@@ -91,7 +92,7 @@ public class JWTUtils {
                 .compact();//生成字符串类型的Token
         //将生成的Token字符串存入Redis，同时设置缓存有效期
         if (StringUtils.hasText(token)) {
-            redisTemplate.opsForValue().set(username, token);
+            redisTemplate.opsForValue().set(username, JSON.toJSONString(user));
         }
         return token;
     }

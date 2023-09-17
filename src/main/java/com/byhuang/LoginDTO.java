@@ -14,7 +14,9 @@ import java.util.Collection;
 @AllArgsConstructor
 public class LoginDTO implements UserDetails {
 
-    private User user;
+    private String username;
+
+    private String password;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -23,12 +25,12 @@ public class LoginDTO implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return user.getName();
+        return username;
     }
 
     @Override
@@ -49,5 +51,10 @@ public class LoginDTO implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public LoginDTO(User user) {
+        this.username = user.getName();
+        this.password = user.getPassword();
     }
 }
