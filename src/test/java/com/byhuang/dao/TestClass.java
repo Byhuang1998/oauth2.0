@@ -1,6 +1,7 @@
 package com.byhuang.dao;
 
 import com.byhuang.LoginDTO;
+import com.byhuang.pojo.entity.Client;
 import com.byhuang.pojo.entity.User;
 import com.byhuang.utils.JWTUtils;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,9 @@ public class TestClass {
     private UserDao userDao;
 
     @Autowired
+    private ClientDao clientDao;
+
+    @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
@@ -28,6 +32,12 @@ public class TestClass {
     }
 
     @Test
+    public void testGetClientById() {
+        Client client = clientDao.selectClientById("c1");
+        System.out.println(client.toString());
+    }
+
+    @Test
     public void testRedisTemplate() {
         redisTemplate.opsForValue().set("key", "value");
 
@@ -37,9 +47,9 @@ public class TestClass {
 
     @Test
     public void testBCryptPasswordEncoder() {
-        String encode = bCryptPasswordEncoder.encode("123456");
+        String encode = bCryptPasswordEncoder.encode("secret");
         System.out.println("encode: " + encode);
-        boolean matches = bCryptPasswordEncoder.matches("123456", encode);
+        boolean matches = bCryptPasswordEncoder.matches("secret", encode);
         System.out.println(matches);
     }
 
