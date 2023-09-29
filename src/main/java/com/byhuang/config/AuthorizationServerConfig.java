@@ -1,6 +1,7 @@
 package com.byhuang.config;
 
 import com.byhuang.service.MyClientDetailsService;
+import io.jsonwebtoken.JwtHandlerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,12 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+
+import java.util.Arrays;
+import java.util.jar.JarEntry;
 
 @Configuration
 @EnableAuthorizationServer
@@ -35,6 +41,9 @@ public class    AuthorizationServerConfig extends AuthorizationServerConfigurerA
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -67,6 +76,11 @@ public class    AuthorizationServerConfig extends AuthorizationServerConfigurerA
         defaultTokenServices.setSupportRefreshToken(true);
         defaultTokenServices.setAccessTokenValiditySeconds(7200);
         defaultTokenServices.setRefreshTokenValiditySeconds(259200);
+
+        TokenEnhancerChain chain = new TokenEnhancerChain();
+        chain.setTokenEnhancers(Arrays.asList(jwtAccessTokenConverter));
+        defaultTokenServices.setTokenEnhancer(chain);
         return defaultTokenServices;
     }
+
 }
