@@ -37,7 +37,7 @@ import java.util.Map;
 public class JWTUtils {
     /*================================= 属性 =================================*/
     //Jwt的加密密钥
-    private static String secretKey = "secret";
+    private static String secretKey = "DefaultJwtSecretKey";
     //使用BASE64加密后的Jwt的加密密钥
     private static final String BASE64_SECRET_KEY = TextCodec.BASE64.encode(secretKey) +
             TextCodec.BASE64.encode(secretKey) + TextCodec.BASE64.encode(secretKey);
