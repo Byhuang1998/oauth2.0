@@ -1,6 +1,7 @@
 package com.byhuang.config;
 
 import com.byhuang.service.MyClientDetailsService;
+import com.byhuang.service.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
+import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
@@ -19,7 +22,10 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableAuthorizationServer
@@ -43,6 +49,9 @@ public class    AuthorizationServerConfig extends AuthorizationServerConfigurerA
     @Autowired
     private JwtAccessTokenConverter jwtAccessTokenConverter;
 
+    @Autowired
+    private MyUserDetails userService;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.withClientDetails(clientDetailsService);
@@ -54,6 +63,7 @@ public class    AuthorizationServerConfig extends AuthorizationServerConfigurerA
         endpoints.authenticationManager(authenticationManager)
                 .authorizationCodeServices(authorizationCodeServices)
                 .tokenServices(tokenServices())
+                .tokenGranter(tokenGranter(endpoints))
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.POST);
 
     }
@@ -79,6 +89,25 @@ public class    AuthorizationServerConfig extends AuthorizationServerConfigurerA
         chain.setTokenEnhancers(Arrays.asList(jwtAccessTokenConverter));
         defaultTokenServices.setTokenEnhancer(chain);
         return defaultTokenServices;
+    }
+
+    /**
+     * 添加自定义授权类型
+     *
+     * @return List<TokenGranter>
+     */
+    private TokenGranter tokenGranter(AuthorizationServerEndpointsConfigurer endpoints) {
+
+        // endpoints.getTokenGranter() 获取SpringSecurity OAuth2.0 现有的授权类型
+        List<TokenGranter> granters = new ArrayList<TokenGranter>(Collections.singletonList(endpoints.getTokenGranter()));
+
+        // 构建短信验证授权类型
+        SmsCodeTokenGranter smsCodeTokenGranter = new SmsCodeTokenGranter(endpoints.getTokenServices(), endpoints.getClientDetailsService(),
+                endpoints.getOAuth2RequestFactory(),userService);
+        // 向集合中添加短信授权类型
+        granters.add(smsCodeTokenGranter);
+        // 返回所有类型
+        return new CompositeTokenGranter(granters);
     }
 
 }
